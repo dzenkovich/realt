@@ -1,4 +1,4 @@
-import { CLUSTER_PRECISION, MAX_SALE_PRICE, MIN_SALE_PRICE } from '../constants'
+import { CLUSTER_PRECISION, MAX_RENT_PRICE, MAX_SALE_PRICE, MIN_RENT_PRICE, MIN_SALE_PRICE } from '../constants'
 import chroma from 'chroma-js'
 
 class cluster {
@@ -8,8 +8,8 @@ class cluster {
     this.items = []
   }
 
-  addItem = ({id, rooms, price}) => {
-    this.items.push({id, rooms, price})
+  addItem = (item) => {
+    this.items.push(item)
   }
 }
 
@@ -30,7 +30,7 @@ export const clusterData = (data, bounds, zoom) => {
   }, [])
 }
 
-const getZoomMultiplier = zoom => {
+export const getZoomMultiplier = zoom => {
   return Math.pow(2, 19 - zoom)
 }
 
@@ -58,10 +58,40 @@ const searchForCluster = (clusters, zoom, lat, lng) => {
   return result
 }
 
-const scale = chroma.scale(['green', 'yellow', 'red'])
+export const findInArea = (flats, lat, lng, zoom) => {
+  const result = []
+  const precision = CLUSTER_PRECISION * getZoomMultiplier(zoom)
+  for (let i = 0; i < flats.length; i++) {
+    const flat = flats[i]
+    let deltaLat = Math.abs(flat.lat - lat)
+    let deltaLng = Math.abs(flat.lng - lng)
+    if (deltaLat <= precision && deltaLng <= precision) {
+      result.push(flat)
+    }
+  }
+  return result
+}
+
+export const limitToBounds = (data, bounds) => {
+  return data.filter(item => {
+    // omit points that are out of bounds
+    return (item.lat < bounds.nw.lat && item.lat > bounds.se.lat) &&
+      (item.lng < bounds.se.lng && item.lng > bounds.nw.lng)
+  })
+}
+
+const saleScale = chroma.scale(['green', 'yellow', 'red'])
 
 export const getSaleColor = (price, min = MIN_SALE_PRICE, max = MAX_SALE_PRICE) => {
   let percent = (price - min) / (max - min)
-  // I hope scale handles edge cases of <0 or >1
-  return scale(percent).hex(percent)
+  // I hope saleScale handles edge cases of <0 or >1
+  return saleScale(percent).hex(percent)
+}
+
+const rentScale = chroma.scale(['purple', 'green'])
+
+export const getRentColor = (price, min = MIN_RENT_PRICE, max = MAX_RENT_PRICE) => {
+  let percent = (price - min) / (max - min)
+  // I hope saleScale handles edge cases of <0 or >1
+  return rentScale(percent).css()
 }

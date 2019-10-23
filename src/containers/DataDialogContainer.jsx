@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { filterFlats, setFilter } from '../actions/filterActions'
+import { filterFlats, filterRents, setFilter } from '../actions/filterActions'
 import DataDialog from '../components/DataDialog'
 
 const DataDialogContainer = props => <DataDialog {...props}/>
@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   filterFlats,
+  filterRents,
   setFilter,
 }
 

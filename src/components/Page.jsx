@@ -4,6 +4,7 @@ import { FilterList } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import MapContainer from '../containers/MapContainer'
 import DataDialogContainer from '../containers/DataDialogContainer'
+import DetailContainer from '../containers/DetailContainer'
 
 const useStyles = makeStyles(theme => ({
   page: {
@@ -30,6 +31,7 @@ function Page() {
       <MapContainer/>
       <Fab color="primary" aria-label="add" onClick={handleOpen} className={classes.fab}><FilterList /></Fab>
       <DataDialogContainer open={open} onCancel={handleOpen}/>
+      <DetailContainer/>
     </div>
   )
 }

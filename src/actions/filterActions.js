@@ -25,3 +25,9 @@ export const filterFlats = createAsyncAction(Types.FILTER_FLATS, (dispatch, data
   return Service.get(URLS.flats, data)
 }, serverErrorHandler)
 
+export const filterRents = createAsyncAction(Types.FILTER_RENTS, (dispatch, data) => {
+  dispatch({ type: Types.FILTER_RENTS, payload: data })
+  return Service.get(URLS.rents, data)
+}, serverErrorHandler)
+
+

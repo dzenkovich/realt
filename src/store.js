@@ -7,6 +7,8 @@ import MapInitialState from './reducers/mapInitialState'
 import MapReducer from './reducers/mapReducer'
 import FilterInitialState from './reducers/filterInitialState'
 import FilterReducer from './reducers/filterReducer'
+import DetailInitialState from './reducers/detailInitialState'
+import DetailReducer from './reducers/detailReducer'
 
 // Collapse all logs and ignore system-level logs (show only app-specific)
 const loggerMiddleware = createLogger({
@@ -20,12 +22,14 @@ const reducers = combineReducers({
   common: CommonReducer,
   map: MapReducer,
   filter: FilterReducer,
+  detail: DetailReducer,
 })
 
 const initialState = {
   common: CommonInitialState,
   map: MapInitialState,
   filter: FilterInitialState,
+  detail: DetailInitialState,
 }
 
 export default createStore(

@@ -11,6 +11,7 @@ class DataDialog extends Component {
     filter: PropTypes.object.isRequired,
     setFilter: PropTypes.func.isRequired,
     filterFlats: PropTypes.func.isRequired,
+    filterRents: PropTypes.func.isRequired,
   }
 
   state = {
@@ -18,15 +19,20 @@ class DataDialog extends Component {
   }
 
   componentDidMount() {
-    const { setFilter, filterFlats } = this.props
+    const { setFilter } = this.props
     const filter = loadFilter()
     if (filter) setFilter(filter)
-    else filterFlats(this.props.filter)
+    else this._filter(this.props.filter)
+  }
+
+  _filter = filter => {
+    const {filterFlats, filterRents} = this.props
+    return Promise.all([filterFlats(filter), filterRents(filter)])
   }
 
   componentDidUpdate(oldProps) {
     if (oldProps.filter !== this.props.filter) {
-      this.props.filterFlats(this.props.filter)
+      this._filter(this.props.filter)
     }
   }
 
