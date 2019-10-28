@@ -17,13 +17,16 @@ export default function(state = initialState, action) {
     case Types.MAP_DETAILS:
       const { items, lat, lng } = action.payload
       const clustersRent = findInArea(state.medianRent, lat, lng, state.zoom)
+      const rentFlats = clustersRent.reduce((result, item) => {
+        return result.concat(item.items)
+      }, [])
+      const rentPrices = rentFlats.map(flat => flat.priceMonth).sort()
       return {
         ...state,
         open: true,
         saleIds: items.map(flat => flat.flatId),
-        rentIds: clustersRent.reduce((result, item) => {
-            return result.concat(item.items.map(flat => flat.flatId))
-        }, []),
+        rentIds: rentFlats.map(flat => flat.flatId),
+        rentMedian: rentPrices[Math.floor(rentPrices.length / 2)] || 0
       }
     case Types.DETAIL_LOAD_SALE_SUCCESS:
       return {

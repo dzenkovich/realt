@@ -88,7 +88,7 @@ export const getSaleColor = (price, min = MIN_SALE_PRICE, max = MAX_SALE_PRICE) 
   return saleScale(percent).hex(percent)
 }
 
-const rentScale = chroma.scale(['purple', 'green'])
+const rentScale = chroma.scale(['red', 'yellow', 'green'])
 
 export const getRentColor = (price, min = MIN_RENT_PRICE, max = MAX_RENT_PRICE) => {
   let percent = (price - min) / (max - min)

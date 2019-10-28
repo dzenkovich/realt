@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Checkbox, FormControlLabel, FormGroup, Slider, Switch, Typography } from '@material-ui/core'
 import { withStyles } from '@material-ui/styles'
-
 import PropTypes from 'prop-types'
+import { THIS_YEAR } from '../constants'
 
 const thousands = num => Math.round(num / 1000)
 
 const makeMarks = data => data.map(item => ({ value: item, label: item }))
 
+const yearMarks = makeMarks([1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020])
 const priceMarks = makeMarks([50, 100, 150, 200, 250, 300, 350])
 const priceMeterMarks = makeMarks([500, 1000, 1500, 2000, 2500, 3000, 3500])
 const areaMarks = makeMarks([30, 60, 90, 120, 150, 180, 210])
@@ -27,6 +28,8 @@ class Filter extends Component {
   _parseFilterToValues = filter => {
     return {
       rooms: filter.rooms || [1, 2, 3],
+      yearOn: !!filter.year,
+      year: filter.year ? [filter.year.gt || 1950, filter.year.lt || THIS_YEAR] : [1950, THIS_YEAR],
       priceOn: !!filter.price,
       price: filter.price ? [thousands(filter.price.gt) || 50, thousands(filter.price.lt) || 150] : [50, 150],
       priceMeterOn: !!filter.priceMeter,
@@ -49,21 +52,22 @@ class Filter extends Component {
   }
 
   updateFilter = () => {
-    const { rooms, priceOn, price, priceMeterOn, priceMeter, areaOn, area } = this.state
+    const { rooms, yearOn, year, priceOn, price, priceMeterOn, priceMeter, areaOn, area } = this.state
 
-    const makeRange = range => {
+    const makeRange = (range, multiplier) => {
       const [gt, lt] = range
       if (gt || lt) {
         const filter = {}
-        if (gt) filter.gt = gt
-        if (lt) filter.lt = lt
+        if (gt) filter.gt = multiplier ? gt * multiplier : gt
+        if (lt) filter.lt = multiplier ? lt * multiplier : lt
         return filter
       }
       return null
     }
 
     const filter = { rooms }
-    if (priceOn) filter.price = makeRange(price)
+    if (yearOn) filter.year = makeRange(year)
+    if (priceOn) filter.price = makeRange(price, 1000)
     if (priceMeterOn) filter.priceMeter = makeRange(priceMeter)
     if (areaOn) filter.area = makeRange(area)
 
@@ -94,7 +98,7 @@ class Filter extends Component {
 
   render() {
     const { classes } = this.props
-    const { rooms, priceOn, price, priceMeterOn, priceMeter, areaOn, area } = this.state
+    const { rooms, yearOn, year, priceOn, price, priceMeterOn, priceMeter, areaOn, area } = this.state
 
     return (
       <>
@@ -119,7 +123,19 @@ class Filter extends Component {
                             label="3k"
           />
         </FormGroup>
-
+        <FormGroup className={classes.formGroup}>
+          <FormControlLabel label="Год постройки:" control={
+            <Switch name="yearOn" checked={yearOn} onChange={this.handleSwitch}/>
+          }/>
+          <Slider min={1950}
+                  max={THIS_YEAR}
+                  disabled={!yearOn}
+                  marks={yearMarks}
+                  value={year}
+                  valueLabelDisplay="auto"
+                  aria-labelledby="range-slider"
+                  onChange={this.makeSliderChangeHandle('year')}/>
+        </FormGroup>
         <FormGroup className={classes.formGroup}>
           <FormControlLabel label="Цена (тыс. $):" control={
             <Switch name="priceOn" checked={priceOn} onChange={this.handleSwitch}/>

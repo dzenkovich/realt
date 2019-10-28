@@ -65,3 +65,7 @@ export const formatDate = (date, format) => {
 export const filterHash = hash => {
   return Object.keys(hash).filter(id => hash[id])
 }
+
+export const calculateROI = (price, rent) => {
+  return (100 * (rent * 12) / price).toFixed(2)
+}

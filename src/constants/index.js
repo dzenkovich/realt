@@ -1,5 +1,7 @@
 export const DATE_FORMAT = 'DD/MM/YYYY'
 
+export const THIS_YEAR = (new Date()).getFullYear()
+
 export const DEFAULT_CENTER = { lat: 53.901183, lng: 27.558321 }
 export const DEFAULT_ZOOM = 14
 

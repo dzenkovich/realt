@@ -30,6 +30,7 @@ class Detail extends Component {
     rentIds: PropTypes.array.isRequired,
     sale: PropTypes.array.isRequired,
     rent: PropTypes.array.isRequired,
+    rentMedian: PropTypes.number.isRequired,
     closeDetail: PropTypes.func.isRequired,
     loadSale: PropTypes.func.isRequired,
     loadRent: PropTypes.func.isRequired,
@@ -76,7 +77,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { open, sale, rent, closeDetail, classes } = this.props
+    const { open, sale, rent, rentMedian, closeDetail, classes } = this.props
     const { value, saleColorBars, rentColorBars } = this.state
 
     return (
@@ -100,7 +101,7 @@ class Detail extends Component {
               <SwipeableViews axis="x" index={value} onChangeIndex={this.handleChangeIndex}>
                 <Box value={value} index={0}>
                   {
-                    sale.map(flat => <FlatCard key={flat.flatId} data={flat}/>)
+                    sale.map(flat => <FlatCard key={flat.flatId} data={flat} rentMedian={rentMedian} />)
                   }
                 </Box>
                 <Box value={value} index={1}>

@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
   rentIds: state.detail.rentIds,
   sale: state.detail.sale,
   rent: state.detail.rent,
+  rentMedian: state.detail.rentMedian,
 })
 
 const mapDispatchToProps = {

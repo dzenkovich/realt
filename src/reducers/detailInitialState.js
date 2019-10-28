@@ -4,6 +4,7 @@ export default {
   open: false,
   saleIds: [],
   rentIds: [],
+  rentMedian: 0,
   sale: [],
   rent: [],
   zoom: DEFAULT_ZOOM,
